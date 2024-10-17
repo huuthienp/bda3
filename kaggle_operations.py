@@ -36,3 +36,36 @@ def download_dataset(api, dataset, path=os.getcwd(), unzip=True):
         unzip=unzip,
     )
     print(f"Successfully downloaded dataset: {dataset}")
+
+
+
+def download_output(api, kernel_owner, kernel_slug, output_file, download_path='.'):
+    """
+    Download a specific output file from a Kaggle kernel.
+
+    Args:
+        api (KaggleApi): Authenticated Kaggle API instance.
+        kernel_owner (str): Kernel owner's username.
+        kernel_slug (str): Kernel slug.
+        output_file (str): Name of the output file to download.
+        download_path (str, optional): Download destination. Defaults to current directory.
+
+    Returns:
+        str: Full path of the downloaded file, or None if download fails.
+    """
+    full_kernel_slug = f'{kernel_owner}/{kernel_slug}'
+
+    try:
+        api.kernel_output_download(
+            kernel_owner_slug=full_kernel_slug,
+            path=download_path,
+            file_name=output_file
+        )
+
+        full_file_path = os.path.join(download_path, output_file)
+        print(f'Successfully downloaded: {full_file_path}')
+        return full_file_path
+
+    except Exception as e:
+        print('str(e).strip()')
+        return None
