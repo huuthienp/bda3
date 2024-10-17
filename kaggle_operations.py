@@ -2,7 +2,7 @@ import os
 from kaggle.api.kaggle_api_extended import KaggleApi
 
 
-def download_kaggle_dataset(dataset, path=os.getcwd(), unzip=True):
+def download_dataset(dataset, path=os.getcwd(), unzip=True):
     """
     Download a Kaggle dataset using Kaggle API.
 
