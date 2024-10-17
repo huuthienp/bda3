@@ -2,14 +2,15 @@ import os
 from kaggle.api.kaggle_api_extended import KaggleApi
 
 
-def download_dataset(dataset, path=os.getcwd(), unzip=True):
+def download_dataset(api, dataset, path=os.getcwd(), unzip=True):
     """
     Download a Kaggle dataset using Kaggle API.
 
-    This function checks for required environment variables, authenticates with
-    Kaggle API, and downloads specified dataset to given directory.
+    This function checks for required environment variables, uses the provided
+    KaggleApi object, and downloads specified dataset to given directory.
 
     Args:
+        api (KaggleApi): An authenticated KaggleApi object.
         dataset (str): Name of dataset to download (username/dataset_name).
         path (str): Directory where dataset will be downloaded to.
         unzip (bool, optional): Whether to unzip downloaded files. Defaults to True.
@@ -28,10 +29,8 @@ def download_dataset(dataset, path=os.getcwd(), unzip=True):
     if missing_env_vars:
         raise EnvironmentError(f"Missing environment variables: {', '.join(missing_env_vars)}")
 
-    # Initialize Kaggle API
-    KaggleApi().authenticate()
-
-    KaggleApi().dataset_download_files(
+    # Use the provided KaggleApi object
+    api.dataset_download_files(
         dataset=dataset,
         path=path,
         unzip=unzip,
