@@ -107,14 +107,14 @@ def kdeplot(series, title):
 
 def scale_dataframe(df, scaler, dtypes=['float64']):
     # Identify float64 columns
-    float64_columns = df.select_dtypes(include=dtypes).columns
-    float64_column_indices = [df.columns.get_loc(col) for col in float64_columns]
+    dtype_columns = df.select_dtypes(include=dtypes).columns
+    dtype_column_indices = [df.columns.get_loc(col) for col in dtype_columns]
 
     # Extract float64 columns
-    df_float64 = df.iloc[:, float64_column_indices]
+    df_dtypes = df.iloc[:, dtype_column_indices]
 
     # Fit a new scaler to transform the data
-    scaled_df = scaler.fit_transform(df_float64)
+    scaled_df = scaler.fit_transform(df_dtypes)
 
     # Return the scaled dataframe and the scaler
     return scaled_df
