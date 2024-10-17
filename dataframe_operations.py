@@ -102,3 +102,22 @@ def kdeplot(series, title):
     sns.set_theme(style='darkgrid')
     ax = sns.kdeplot(series, color='green')
     ax.set_title(title)
+
+
+
+def scale_dataframe(df, scaler):
+    # Identify float64 columns
+    float64_columns = df.select_dtypes(include=['float64']).columns
+    float64_column_indices = [df.columns.get_loc(col) for col in float64_columns]
+
+    # Extract float64 columns
+    df_float64 = df.iloc[:, float64_column_indices]
+
+    # Fit a new scaler to transform the data
+    scaled_df = scaler.fit_transform(df_float64)
+
+    # See a small part of the result
+    print(scaled_df.head())
+
+    # Return the scaled dataframe and the scaler
+    return scaled_df
