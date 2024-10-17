@@ -105,9 +105,9 @@ def kdeplot(series, title):
 
 
 
-def scale_dataframe(df, scaler):
+def scale_dataframe(df, scaler, dtypes=['float64']):
     # Identify float64 columns
-    float64_columns = df.select_dtypes(include=['float64']).columns
+    float64_columns = df.select_dtypes(include=dtypes).columns
     float64_column_indices = [df.columns.get_loc(col) for col in float64_columns]
 
     # Extract float64 columns
@@ -115,9 +115,6 @@ def scale_dataframe(df, scaler):
 
     # Fit a new scaler to transform the data
     scaled_df = scaler.fit_transform(df_float64)
-
-    # See a small part of the result
-    print(scaled_df.head())
 
     # Return the scaled dataframe and the scaler
     return scaled_df
