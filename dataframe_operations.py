@@ -40,7 +40,7 @@ def explore_structure(df, return_dict=False):
             # Print the data type in uppercase
             print(dt.upper())
             df_stats = summary_statistics(df[cols])
-            print(df_stats.round(4))
+            try_display(df_stats.round(4))
             print(hr)
         else:
             # For non-float data types, print unique value counts and plot
@@ -75,6 +75,13 @@ def explore_structure(df, return_dict=False):
     # Return the dictionary if return_dict is True
     if return_dict:
         return df_dict
+
+
+def try_display(df):
+    try:
+        display(df)
+    except:
+        print(df)
 
 
 def summary_statistics(df, stats=['min', 'max', 'mean', 'median', 'std']):
