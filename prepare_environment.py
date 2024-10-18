@@ -2,6 +2,9 @@ import os
 import sys
 import subprocess
 
+import socket
+from IPython import get_ipython
+
 
 def check_platform():
     """
@@ -19,6 +22,29 @@ def check_platform():
     # If neither Colab nor Kaggle, return 'Unknown'
     else:
         return 'Unknown'
+
+
+def is_jupyter_on_localhost():
+    # Check if we're running in a Jupyter environment
+    try:
+        ipython = get_ipython()
+        if 'IPKernelApp' not in ipython.config:
+            return False  # We're not in a Jupyter environment
+    except:
+        return False  # get_ipython() is not available
+
+    # Get the IP address Jupyter is running on
+    jupyter_ip = ipython.config.get('ServerApp', {}).get('ip', '')
+
+    # Check if the IP is localhost or an empty string (which defaults to localhost)
+    if jupyter_ip in ['', 'localhost', '127.0.0.1']:
+        return True
+
+    # Check if the IP is a local IP address
+    try:
+        return ipaddress.ip_address(jupyter_ip).is_private
+    except:
+        return False
 
 
 def pip_install(requirements=None, return_installed=False):
