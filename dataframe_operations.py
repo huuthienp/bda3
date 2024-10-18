@@ -41,14 +41,13 @@ def explore_structure(df, return_dict=False):
         
         # For float data types, print summary statistics
         if 'float' in dt:
-            # Print the data type in uppercase
-            print(dt.upper())
+            print(f'{dt}-type columns')
             df_stats = summary_statistics(df[cols])
             try_display(df_stats.round(4))
             print(hr)
         else:
             # For non-float data types, print unique value counts and plot
-            print(dt.upper())
+            print(f'{dt}-type columns')
 
             for c in cols:
                 # Get the column index
