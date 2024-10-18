@@ -161,4 +161,4 @@ def compress_and_save_df(df, output_file, format='feather', compression='zstd'):
             df.to_parquet(output_file, compression=compression)
         print(f'Successfully saved DataFrame to {output_file} using {format} format with {compression} compression.')
     except Exception as e:
-        print({str(e).strip())
+        print(str(e).strip())
