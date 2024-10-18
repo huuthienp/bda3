@@ -3,6 +3,10 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+import pyarrow as pa
+import pyarrow.feather as feather
+import pyarrow.parquet as pq
+
 
 def explore_structure(df, return_dict=False):
     """
@@ -125,3 +129,36 @@ def scale_dataframe(df, scaler, dtypes=['float64']):
 
     # Return the scaled dataframe and the scaler
     return scaled_df
+
+
+def compress_and_save_df(df, output_file, format='feather', compression='zstd'):
+    """
+    Compress and save a pandas DataFrame to either feather or parquet format.
+    
+    Args:
+    df (pandas.DataFrame): The DataFrame to be saved.
+    output_file (str): The name of the output file (including path if needed).
+    format (str): The format to save the file in. Either 'feather' or 'parquet'. Default is 'feather'.
+    compression (str): The compression algorithm to use. Default is 'zstd'.
+    
+    Returns:
+    None
+    
+    Example usage:
+    compress_and_save_df(X_train, 'X_train_compressed', format='feather', compression='zstd')
+    compress_and_save_df(X_train, 'X_train_compressed', format='parquet', compression='snappy')
+    """
+    if format not in ['feather', 'parquet']:
+        raise ValueError("Compression format must be either 'feather' or 'parquet'")
+    
+    if not output_file.lower().endswith(f'.{format}'):
+        output_file += f'.{format}'
+    
+    try:
+        if format == 'feather':
+            feather.write_feather(df, output_file, compression=compression)
+        else:  # parquet
+            df.to_parquet(output_file, compression=compression)
+        print(f'Successfully saved DataFrame to {output_file} using {format} format with {compression} compression.')
+    except Exception as e:
+        print({str(e).strip())
