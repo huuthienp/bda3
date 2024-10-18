@@ -38,34 +38,45 @@ def download_dataset(api, dataset, path=os.getcwd(), unzip=True):
     print(f"Successfully downloaded dataset: {dataset}")
 
 
-
-def download_output(api, kernel_owner, kernel_slug, output_file, download_path='.'):
+def download_output(kernel_owner, kernel_slug, output_file, output_path='.'):
     """
-    Download a specific output file from a Kaggle kernel.
+    Download a specific output file from a Kaggle kernel using the Kaggle CLI.
 
     Args:
-        api (KaggleApi): Authenticated Kaggle API instance.
-        kernel_owner (str): Kernel owner's username.
-        kernel_slug (str): Kernel slug.
-        output_file (str): Name of the output file to download.
-        download_path (str, optional): Download destination. Defaults to current directory.
+        kernel_owner (str): The username of the kernel owner.
+        kernel_slug (str): The slug of the kernel.
+        output_file (str): The name of the file to download.
+        output_path (str): The path where the file will be saved.
 
     Returns:
-        str: Full path of the downloaded file, or None if download fails.
+        bool: True if download is successful, False otherwise.
+
+    Raises:
+        subprocess.CalledProcessError: If the Kaggle CLI command fails.
+        FileNotFoundError: If the Kaggle CLI is not installed or not in PATH.
+        Exception: For any other unexpected errors.
+
+    Note:
+        Requires Kaggle CLI to be installed and configured with valid credentials.
     """
-    full_kernel_slug = f'{kernel_owner}/{kernel_slug}'
+    command = [
+        'kaggle', 'kernels', 'output',
+        f'{kernel_owner}/{kernel_slug}',
+        '-p', output_path,
+        '-f', output_file
+    ]
 
     try:
-        api.kernel_output_download(
-            kernel_owner_slug=full_kernel_slug,
-            path=download_path,
-            file_name=output_file
-        )
-
-        full_file_path = os.path.join(download_path, output_file)
-        print(f'Successfully downloaded: {full_file_path}')
-        return full_file_path
-
+        result = subprocess.run(command, check=True, capture_output=True, text=True)
+        print(f'Successfully downloaded {output_file} to {output_path}')
+        return True
+    except subprocess.CalledProcessError as e:
+        print(e.stderr.strip())
+        return False
+    except FileNotFoundError:
+        print('Error: Kaggle CLI not found. Make sure it is installed and in your PATH.')
+        return False
     except Exception as e:
+        print('Unexpected error:')
         print(str(e).strip())
-        return None
+        return False
