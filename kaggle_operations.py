@@ -39,14 +39,13 @@ def download_dataset(api, dataset, path=os.getcwd(), unzip=True):
     print(f"Successfully downloaded dataset: {dataset}")
 
 
-def download_output(kernel_owner, kernel_slug, output_file, output_path='.'):
+def download_output(kernel_owner, kernel_slug, output_path='kernel_output'):
     """
     Download a specific output file from a Kaggle kernel using the Kaggle CLI.
 
     Args:
         kernel_owner (str): The username of the kernel owner.
         kernel_slug (str): The slug of the kernel.
-        output_file (str): The name of the file to download.
         output_path (str): The path where the file will be saved.
 
     Returns:
@@ -64,12 +63,11 @@ def download_output(kernel_owner, kernel_slug, output_file, output_path='.'):
         'kaggle', 'kernels', 'output',
         f'{kernel_owner}/{kernel_slug}',
         '-p', output_path,
-        '-f', output_file
     ]
 
     try:
         result = subprocess.run(command, check=True, capture_output=True, text=True)
-        print(f'Successfully downloaded {output_file} to {output_path}')
+        print(f'Successfully downloaded output to {output_path}')
         return True
     except subprocess.CalledProcessError as e:
         print(e.stderr.strip())
