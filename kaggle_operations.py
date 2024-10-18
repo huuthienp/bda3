@@ -67,5 +67,5 @@ def download_output(api, kernel_owner, kernel_slug, output_file, download_path='
         return full_file_path
 
     except Exception as e:
-        print('str(e).strip()')
+        print(str(e).strip())
         return None
