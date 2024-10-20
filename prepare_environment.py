@@ -47,57 +47,37 @@ def is_jupyter_on_localhost():
         return False
 
 
-def pip_install(requirements=None, return_installed=False):
-    """
+def pip_install(requirements = None) -> None:
+    '''
     Install Python packages using pip.
 
     Args:
         requirements (list): List of package names to install.
-        return_installed (bool): If True, return list of successfully installed packages.
 
-    Returns:
-        list or None: List of installed packages if return_installed is True, else None.
-    """
-    # Check if requirements list is empty or None
+    Returns: None.
+    '''
+    # Check if requirements list is None or empty
     if not requirements:
-        print("Error: No requirements provided. Aborting installation.")
+        print('Error: No requirements provided. Aborting installation.', file=sys.stderr)
         return None
 
-    filename = 'requirements.txt'
     # Prepare the base command for pip install
     command = [sys.executable, '-m', 'pip', 'install', '--quiet']
-    installed_packages = []
 
-    print("Starting package installation...")
+    print('Starting package installation...')
     for r in requirements:
         try:
             # Attempt to install each package
             print(f'Installing {r}...', end=' ', flush=True)
-            result = subprocess.run(command + [r], check=True, capture_output=True, text=True)
-            print('Success')
-            # If successful, add to the list of installed packages
-            installed_packages.append(r)
+            subprocess.run(command + [r], check=True, capture_output=True, text=True)
+            print('Success.')
         except subprocess.CalledProcessError as e:
             # Handle pip installation errors
-            print('Failed')
-            print(e.stderr.strip())
-            continue
+            print('Failed.')
+            print(e.stderr.strip(), file=sys.stderr)
         except Exception as e:
             # Handle any unexpected errors
-            print('Failed')
-            print('Unexpected error:')
-            print(str(e))
+            print('Unexpected error.')
+            traceback.print_exc()
 
-    # Write successfully installed packages to file
-    if installed_packages:
-        with open(filename, 'w') as file:
-            for p in installed_packages:
-                file.write(f'{p}\n')
-        print(f'List of {len(installed_packages)} installed packages written to: {filename}')
-    else:
-        print('No packages were successfully installed.')
-
-    # Return installed packages list if requested
-    if return_installed:
-        return installed_packages
     return None
